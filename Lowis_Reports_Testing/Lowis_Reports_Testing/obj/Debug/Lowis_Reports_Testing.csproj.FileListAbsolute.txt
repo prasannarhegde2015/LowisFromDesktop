@@ -1,0 +1,13 @@
+E:\Project\C# Advanced Learning\Events\Lowis_Reports_Testing\Lowis_Reports_Testing\bin\Debug\Lowis_Reports_Testing.dll.config
+E:\Project\C# Advanced Learning\Events\Lowis_Reports_Testing\Lowis_Reports_Testing\bin\Debug\Lowis_Reports_Testing.dll
+E:\Project\C# Advanced Learning\Events\Lowis_Reports_Testing\Lowis_Reports_Testing\bin\Debug\Lowis_Reports_Testing.pdb
+E:\Project\C# Advanced Learning\Events\Lowis_Reports_Testing\Lowis_Reports_Testing\bin\Debug\CUITe.dll
+E:\Project\C# Advanced Learning\Events\Lowis_Reports_Testing\Lowis_Reports_Testing\bin\Debug\Microsoft.VisualStudio.TestTools.UITest.Extension.Silverlight.dll
+E:\Project\C# Advanced Learning\Events\Lowis_Reports_Testing\Lowis_Reports_Testing\obj\Debug\Lowis_Reports_Testing.dll
+E:\Project\C# Advanced Learning\Events\Lowis_Reports_Testing\Lowis_Reports_Testing\obj\Debug\Lowis_Reports_Testing.pdb
+E:\Project\C# Advanced Learning\Events\Lowis_Reports_Testing\Lowis_Reports_Testing\obj\Debug\Lowis_Reports_Testing.csprojResolveAssemblyReference.cache
+E:\Project\Lowis7\Lowis_Reports_Testing\Lowis_Reports_Testing\bin\Debug\Lowis_Reports_Testing.dll.config
+E:\Project\Lowis7\Lowis_Reports_Testing\Lowis_Reports_Testing\bin\Debug\Lowis_Reports_Testing.dll
+E:\Project\Lowis7\Lowis_Reports_Testing\Lowis_Reports_Testing\bin\Debug\Lowis_Reports_Testing.pdb
+E:\Project\Lowis7\Lowis_Reports_Testing\Lowis_Reports_Testing\obj\Debug\Lowis_Reports_Testing.dll
+E:\Project\Lowis7\Lowis_Reports_Testing\Lowis_Reports_Testing\obj\Debug\Lowis_Reports_Testing.pdb
