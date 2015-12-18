@@ -48,6 +48,7 @@ namespace Lowis_Reports_Testing
         #region WellModelImport
         [TestMethod, Description(@"Import Well Models")]
         [DeploymentItem(@"..\TestData\GLImport")]
+        [Timeout(TestTimeout.Infinite)]
 
         public void ImportWellmodelFiles()
         {
@@ -78,8 +79,13 @@ namespace Lowis_Reports_Testing
                   foreach(DataRow dr in dtwll.Rows)
                   {
                       string wellmodlename = dr["ModelFileName"].ToString();
+                      string cmtwellmodlename = wellmodlename;
                       int posuscore = wellmodlename.IndexOf("_");
                       string prewellnumber = wellmodlename.Substring(0, posuscore);
+                      string epochdatetime = wellmodlename.Substring(posuscore + 1, cmtwellmodlename.Length - posuscore -1);
+                      epochdatetime = epochdatetime.Replace(".wflx", "");
+                      DateTime modeldate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(Convert.ToDouble(epochdatetime)).ToLocalTime();
+                      string mdldt = modeldate.ToString("dd-MM-yyyy");
                       string intwellnumber = prewellnumber.Replace("GL", "");
                       DataRow[] result = dtwll.Select("WellNumber='" + intwellnumber + "'");
                       string mapwell = result[0]["WellName"].ToString();
@@ -88,8 +94,16 @@ namespace Lowis_Reports_Testing
                       hr.LogtoTextFile("Model path updated " + wellmodlename);
                       hr.UpdateExcelFileColumn(System.IO.Directory.GetCurrentDirectory() + "\\GL_import.xls", "ExpectedData", "BrowseButton",
                       wellmodlename, "TestCase", "TC_import");
+                      hr.UpdateExcelFileColumn(System.IO.Directory.GetCurrentDirectory() + "\\GL_import.xls", "ExpectedData", "UserComment",
+                      cmtwellmodlename, "TestCase", "TC_import");
                       Playback.Wait(2000);
-                      ui.AddData(System.IO.Directory.GetCurrentDirectory() + "\\GL_import.xls", "TC_import");
+                      hr.UpdateExcelFileColumn(System.IO.Directory.GetCurrentDirectory() + "\\GL_import.xls", "ExpectedData", "EffectiveDate",
+                      mdldt, "TestCase", "TC_import");
+                      Playback.Wait(2000);
+                      if (dr["Attach"].ToString() == "Y")
+                      {
+                          ui.AddData(System.IO.Directory.GetCurrentDirectory() + "\\GL_import.xls", "TC_import");
+                      }
                   }
 
                    
