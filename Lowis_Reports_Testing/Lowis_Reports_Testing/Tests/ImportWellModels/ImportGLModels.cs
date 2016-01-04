@@ -78,6 +78,9 @@ namespace Lowis_Reports_Testing
 
                   foreach(DataRow dr in dtwll.Rows)
                   {
+                      if (dr["Attach"].ToString() == "Y")
+                      {
+
                       string wellmodlename = dr["ModelFileName"].ToString();
                       string cmtwellmodlename = wellmodlename;
                       int posuscore = wellmodlename.IndexOf("_");
@@ -100,8 +103,7 @@ namespace Lowis_Reports_Testing
                       hr.UpdateExcelFileColumn(System.IO.Directory.GetCurrentDirectory() + "\\GL_import.xls", "ExpectedData", "EffectiveDate",
                       mdldt, "TestCase", "TC_import");
                       Playback.Wait(2000);
-                      if (dr["Attach"].ToString() == "Y")
-                      {
+                     
                           ui.AddData(System.IO.Directory.GetCurrentDirectory() + "\\GL_import.xls", "TC_import");
                       }
                   }
