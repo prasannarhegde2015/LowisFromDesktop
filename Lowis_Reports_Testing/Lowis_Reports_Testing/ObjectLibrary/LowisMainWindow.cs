@@ -156,7 +156,14 @@ namespace Lowis_Reports_Testing.ObjectLibrary
             }
 
         }
+        public CUITe_WinCheckBoxTreeItem AllPCPWells
+        {
+            get
+            {
+                return Get<CUITe_WinCheckBoxTreeItem>("Name=All PCP Wells");
+            }
 
+        }
         public CUITe_WinCheckBoxTreeItem All
         {
             get

@@ -22,7 +22,7 @@ namespace Lowis_Reports_Testing
     /// Test For Verifying the Chart Viwer Titles, Legends for each of Link 
     /// </summary>
     [CodedUITest]
-    public class ESPConfig :CodedUIBase
+    public class PCPConfig :CodedUIBase
     {
 
         #region TEST_INITIALIZE
@@ -30,7 +30,7 @@ namespace Lowis_Reports_Testing
         [TestInitialize]
         public void InitializeTest()
         {
-           // base.LaunchLowisServer();
+            base.LaunchLowisServer();
         }
         //-----------------------------
         #endregion
@@ -43,49 +43,40 @@ namespace Lowis_Reports_Testing
         }
         #endregion
 
-        #region BeamChartsViewer
-        [TestMethod, Description(@"Beam Charts Verification")]
-        [DeploymentItem(@"..\TestData\ESPConfig")]
+        #region PCPWGC
+        [TestMethod, Description(@"PCPWGC")]
+        [DeploymentItem(@"..\TestData\PCPConfig")]
 
-        public void espwellgrpconfig()
+        public void pcpwellgrpconfig()
         {
             LowisMainWindow Lwindow = new LowisMainWindow();
             LReportPane lpnae = new LReportPane();
             Helper hr = new Helper();
-            string srchWell1 = ConfigurationManager.AppSettings["testwell1"];
+            string pcptcist = System.IO.Directory.GetCurrentDirectory() + "\\PCPTC.txt";
             try
             {
 
                 string repeat = new string('=', 50);
                 hr.LogtoTextFile(repeat + "Test execution Started" + repeat);
-                //Lwindow.All.DoubleClick();
-                //Lwindow.AllWels.Click();
-                //Lwindow.WellTypes.DoubleClick();
-                //Lwindow.AllESPWells.Click();
-                //Lwindow.RefreshWells.Click();
-                //Lwindow.Start.WaitForControlReady();
-                //Lwindow.Start.Click();
-                //Lwindow.clickMenuitem(".Configuration", "ESP Well Group Configuration");
-                //Select a Sepecific Well that can have good data to test these
-              //  Lwindow.SelectWellfromSearch(srchWell1);
-             //   DataTable dt = hr.dtFromExcelFile(System.IO.Directory.GetCurrentDirectory() + "\\BeamChartsLinksName.xls", "Sheet1", "ReportTabPage", "All");
+                Lwindow.All.DoubleClick();
+                Lwindow.AllWels.Click();
+                Lwindow.WellTypes.DoubleClick();
+                Lwindow.AllPCPWells.Click();
+                Lwindow.RefreshWells.Click();
+                Lwindow.Start.WaitForControlReady();
+                Lwindow.Start.Click();
+                Lwindow.clickMenuitem(".Configuration", "PCP Well Group Configuration");
+               
                 string wellnamesfile = ConfigurationManager.AppSettings["wellnamesfile"];
                 UIObect ui = new UIObect();
-              //  System.IO.File.Open(wellnamesfile, FileMode.Open);
-                StreamReader fs = new StreamReader(wellnamesfile);
+                StreamReader fs = new StreamReader(pcptcist);
                 string line = "";
                 while ((line = fs.ReadLine()) != null)
                 {
-                    Lwindow.SelectWellfromSearch(line.Trim());
+                   // Lwindow.SelectWellfromSearch(line.Trim());
                     Playback.Wait(2000);
-                    ui.AddData(System.IO.Directory.GetCurrentDirectory() + "\\ESP_Config_Params.xls", "TC_AEPOC_step_1_3");
+                    ui.AddData(System.IO.Directory.GetCurrentDirectory() + "\\PCP_Config_Params.xls", line.Trim());
                 }
-
-              //  Lwindow.SelectWellfromSearch(srchWell1);
-               
-               
-
-                
                 hr.LogtoTextFile(repeat + "Test execution Ended" + repeat);
 
             }
@@ -137,6 +128,7 @@ namespace Lowis_Reports_Testing
         
 
       
+
        
       
     }

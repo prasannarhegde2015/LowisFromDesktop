@@ -11,6 +11,7 @@ using Keyboard = Microsoft.VisualStudio.TestTools.UITesting.Keyboard;
 using CUITe.Controls.WinControls;
 using CUITe.Controls.WpfControls;
 using CUITe.Controls.HtmlControls;
+using System.Xml.Serialization;
 
 
 
@@ -20,12 +21,19 @@ namespace Lowis_Reports_Testing.ObjectLibrary
     public class LowisConnectDialog : CUITe_WpfWindow
     {
         public LowisConnectDialog() : base("Name=LOWIS: Connect") { }
+     //   private string _searchby, _searchvalue;
         #region combobox
         public CUITe_WpfComboBox serverName { get { return Get<CUITe_WpfComboBox>("Instance=1"); } }
         #endregion
         #region Buttons
         public CUITe_WpfButton Connect { get { return Get<CUITe_WpfButton>("Instance=3"); } }
         public CUITe_WpfButton Settings { get { return Get<CUITe_WpfButton>("Instance=1"); } }
+        public CUITe_WpfButton getWpfButton 
+        { get 
+            { 
+            return Get<CUITe_WpfButton>("Instance=1"); 
+            } 
+        }
 
         #endregion 
         #region Textboxes
@@ -77,4 +85,9 @@ namespace Lowis_Reports_Testing.ObjectLibrary
         public CUITe_WpfEdit storepath { get { return Get<CUITe_WpfEdit>("Instance=1"); } }
         public CUITe_WpfButton btnSavesettings { get { return Get<CUITe_WpfButton>("Instance=3"); } }
     }
+
+   
+        
+
+ 
 }

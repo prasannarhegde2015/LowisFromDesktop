@@ -67,6 +67,7 @@
     <Compile Include="StructureSheet\Obect.cs" />
     <Compile Include="Tests\ESP Welll Group Configuration\ESPWELLGroupConfig.cs" />
     <Compile Include="Tests\ImportWellModels\ImportGLModels.cs" />
+    <Compile Include="Tests\ImportWellModels\ImportWelltest.cs" />
     <Compile Include="Tests\Lowis Charts\BeamChartViewer.cs" />
     <Compile Include="Tests\Lowis Reports\BeamReports.cs" />
     <Compile Include="ObjectLibrary\Helper.cs" />
@@ -75,17 +76,11 @@
     <Compile Include="ObjectLibrary\ReportPane.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\Lowis Reports\SeparatorReport.cs" />
+    <Compile Include="Tests\PCPWGC\PCPWELLGroupConfig.cs" />
     <Compile Include="Tests\TestWellFlo\StructuresheetPOCUIT.cs" />
-    <Compile Include="UIMap.cs">
-      <DependentUpon>UIMap.uitest</DependentUpon>
-    </Compile>
-    <Compile Include="UIMap.Designer.cs">
-      <DependentUpon>UIMap.uitest</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="UIMap.uitest" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

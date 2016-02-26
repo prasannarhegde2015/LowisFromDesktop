@@ -10,278 +10,413 @@ using Microsoft.VisualStudio.TestTools.UITesting.WinControls;
 using Microsoft.VisualStudio.TestTools.UITesting.WpfControls;
 using Microsoft.VisualStudio.TestTools.UITesting.HtmlControls;
 using System.Windows.Automation;
+using System.Xml.Serialization;
+using System.Threading;
 
 namespace Lowis_Reports_Testing.StructureSheet
 {
     class UIObect
     {
 
+
         Helper hlp = new Helper();
 
         public void AddData(string filename, string testcase)
         {
-            DataTable dt1 = hlp.dtFromExcelFile(filename, "Template");
-            DataTable dt2 = hlp.dtFromExcelFile(filename, "ExpectedData", "TestCase", testcase);
-            UITestControl UIcurrentparent = null;
-            for (int i = 0; i < dt1.Rows.Count; i++)
+
+            try
             {
-                string controlValue = "";
-                string parentType = dt1.Rows[i]["ParentType"].ToString();
-                string parentSearchBy = dt1.Rows[i]["parentSearchBy"].ToString();
-                string parentSearchValue = dt1.Rows[i]["parentSearchValue"].ToString();
-                string pTechnology = dt1.Rows[i]["Technology"].ToString();
-                string controlType = dt1.Rows[i]["ControlType"].ToString();
-                string technologyControl = dt1.Rows[i]["TechnologyControl"].ToString();
-                string field = dt1.Rows[i]["Field"].ToString();
-                string action= dt1.Rows[i]["Action"].ToString();
-                string index = dt1.Rows[i]["Index"].ToString();
-                string pindex = dt1.Rows[i]["pindex"].ToString();
-                string searchBy = dt1.Rows[i]["SearchBy"].ToString();
-                string searchValue = dt1.Rows[i]["SearchValue"].ToString();
-                string pOperator = dt1.Rows[i]["pOperator"].ToString();
-                string cOperator = dt1.Rows[i]["cOperator"].ToString();
-                string resetparent = dt1.Rows[i]["ResetParent"].ToString();
-                if (field.Length > 0)
+                DataTable dt1 = hlp.dtFromExcelFile(filename, "Template");
+                DataTable dt2 = hlp.dtFromExcelFile(filename, "ExpectedData", "TestCase", testcase);
+                UITestControl UIcurrentparent = null;
+                bool inmemlist = false;
+                AutomationElementCollection objcol = null;
+                AutomationElementCollection objcol2 = null;
+                AutomationElement paneobject = null;
+                List<UITestControl> pvmasks = new List<UITestControl>();
+                for (int i = 0; i < dt1.Rows.Count; i++)
                 {
-                    controlValue = dt2.Rows[0][field].ToString();
-                }
-
-                if (parentType.Length > 0)
-                {
-                    switch (parentType.ToLower())
+                    string controlValue = "";
+                    string searchBy2 = ""; string searchValue2 = "";
+                    string parentType = dt1.Rows[i]["ParentType"].ToString();
+                    string parentSearchBy = dt1.Rows[i]["parentSearchBy"].ToString();
+                    string parentSearchValue = dt1.Rows[i]["parentSearchValue"].ToString();
+                    string pTechnology = dt1.Rows[i]["Technology"].ToString();
+                    string controlType = dt1.Rows[i]["ControlType"].ToString();
+                    string technologyControl = dt1.Rows[i]["TechnologyControl"].ToString();
+                    string field = dt1.Rows[i]["Field"].ToString();
+                    string action = dt1.Rows[i]["Action"].ToString();
+                    string index = dt1.Rows[i]["Index"].ToString();
+                    string pindex = dt1.Rows[i]["pindex"].ToString();
+                    string searchBy = dt1.Rows[i]["SearchBy"].ToString();
+                    string searchValue = dt1.Rows[i]["SearchValue"].ToString();
+                    string pOperator = dt1.Rows[i]["pOperator"].ToString();
+                    string cOperator = dt1.Rows[i]["cOperator"].ToString();
+                    string resetparent = dt1.Rows[i]["ResetParent"].ToString();
+                    if (IsColumnPresent("SearchBy2", dt1))
                     {
-
-                        #region Window
-                        case "window":
-                            {
-                               
-                                if (resetparent == "1")
-                                {
-                                    UIcurrentparent = null;
-                                }
-                                if (pTechnology.ToLower() == "msaa")
-                                {
-                                    WinWindow uiwindow = null;
-                                    if (UIcurrentparent == null)
-                                    {
-                                         uiwindow = new WinWindow();
-                                    }
-                                    else
-                                    {
-                                         uiwindow = new WinWindow(UIcurrentparent);
-                                    }
-                                    if (pOperator == "=")
-                                    {
-                                        uiwindow.SearchProperties.Add(parentSearchBy, parentSearchValue);
-                                        if (pindex.Length > 0)
-                                        {
-                                            uiwindow.SearchProperties.Add("Instance", pindex);
-                                        }
-                                    }
-                                    else if (pOperator == "~")
-                                    {
-                                        uiwindow.SearchProperties.Add(parentSearchBy, parentSearchValue, PropertyExpressionOperator.Contains);
-                                    }
-                                    UIcurrentparent = uiwindow;
-                                }
-                                else if (pTechnology == "uia")
-                                {
-                                    WpfWindow uiwindow = new WpfWindow();
-                                    if (pOperator == "=")
-                                    {
-                                        uiwindow.SearchProperties.Add(parentSearchBy, parentSearchValue);
-                                    }
-                                    else if (pOperator == "~")
-                                    {
-                                        uiwindow.SearchProperties.Add(parentSearchBy, parentSearchValue, PropertyExpressionOperator.Contains);
-                                    }
-                                    UIcurrentparent = uiwindow;
-
-                                }
-                                break;
-                            }
-                        #endregion
-
-                        #region client
-                        case "client":
-                            {
-                                if (pTechnology.ToLower() == "msaa")
-                                {
-                                    WinClient uicleint = new WinClient(UIcurrentparent);
-                                    if (pOperator == "=")
-                                    {
-                                        uicleint.SearchProperties.Add(parentSearchBy, parentSearchValue);
-                                    }
-                                    else if (pOperator == "~")
-                                    {
-                                        uicleint.SearchProperties.Add(parentSearchBy, parentSearchValue, PropertyExpressionOperator.Contains);
-                                    }
-                                    UIcurrentparent = uicleint;
-                                }
-                                else if (pTechnology.ToLower() == "uia")
-                                {
-                                    // to do
-                                }
-                                break;
-                            }
-                        #endregion
-
-                        #region docuemnt
-                        case "document":
-                            {
-                                if (pTechnology.ToLower() == "web")
-                                {
-                                    HtmlDocument uidoc = new HtmlDocument(UIcurrentparent);
-                                    if (pOperator == "=")
-                                    {
-                                        uidoc.SearchProperties.Add(parentSearchBy, parentSearchValue);
-                                    }
-                                    else if (pOperator == "~")
-                                    {
-                                        uidoc.SearchProperties.Add(parentSearchBy, parentSearchValue, PropertyExpressionOperator.Contains);
-                                    }
-                                    UIcurrentparent = uidoc;
-                                }
-                                else if (pTechnology.ToLower() == "uia")
-                                {
-
-                                    // to do
-                                }
-                                break;
-                            }
-
-#endregion
-
+                        searchBy2 = dt1.Rows[i]["SearchBy2"].ToString();
                     }
-                }
-                if (controlType.Length > 0)
-                {
-                    switch (controlType.ToLower())
+                    if (IsColumnPresent("SearchValue2", dt1))
                     {
-                        #region edit
-                        case "edit":
-                            {
-                                if (technologyControl.ToLower() == "msaa")
+                        searchValue2 = dt1.Rows[i]["SearchValue2"].ToString();
+                    }
+                    if (field.Length > 0)
+                    {
+                        controlValue = dt2.Rows[0][field].ToString();
+                    }
+
+                    if (parentType.Length > 0)
+                    {
+                        switch (parentType.ToLower())
+                        {
+
+                            #region Window
+                            case "window":
                                 {
-                                    WinEdit uiedit = new WinEdit(UIcurrentparent);
-                                    if (cOperator == "=")
+                                    try
                                     {
-                                        uiedit.SearchProperties.Add(searchBy, searchValue);
-                                    }
-                                    else if (cOperator == "~")
-                                    {
-                                        uiedit.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
-                                    }
-
-                                    if (controlValue.Length > 0)
-                                    {
-
-                                        uiedit.Text = controlValue;
-                                    }
-                                }
-                                else if (technologyControl == "UIA")
-                                {
-                                    // to do
-                                }
-                                else if (technologyControl == "Web")
-                                {
-                                    HtmlEdit uiedit = new HtmlEdit(UIcurrentparent);
-                                    if (cOperator == "=")
-                                    {
-                                        uiedit.SearchProperties.Add(searchBy, searchValue);
-                                    }
-                                    else if (cOperator == "~")
-                                    {
-                                        uiedit.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
-                                    }
-
-                                    if (controlValue.Length > 0)
-                                    {
-
-                                        uiedit.Text = controlValue;
-                                    }
-                                }
-
-
-
-                                break;
-                            }
-                        #endregion
-                        #region button
-                        case "button":
-                            {
-                                #region MSAAAButton
-                                if (technologyControl == "MSAA")
-                                {
-                                    WinButton ucntl = new WinButton(UIcurrentparent);
-                                    if (cOperator == "=")
-                                    {
-                                        ucntl.SearchProperties.Add(searchBy, searchValue);
-                                        if (index.Length > 0)
+                                        if (resetparent == "1")
                                         {
-                                            ucntl.SearchProperties.Add("Instance", index);
+                                            UIcurrentparent = null;
+                                        }
+                                        if (pTechnology.ToLower() == "msaa")
+                                        {
+                                            WinWindow uiwindow = null;
+                                            if (UIcurrentparent == null)
+                                            {
+                                                uiwindow = new WinWindow();
+                                            }
+                                            else
+                                            {
+                                                uiwindow = new WinWindow(UIcurrentparent);
+                                            }
+                                            if (pOperator == "=")
+                                            {
+                                                uiwindow.SearchProperties.Add(parentSearchBy, parentSearchValue);
+                                                if (pindex.Length > 0)
+                                                {
+                                                    uiwindow.SearchProperties.Add("Instance", pindex);
+                                                }
+                                            }
+                                            else if (pOperator == "~")
+                                            {
+                                                uiwindow.SearchProperties.Add(parentSearchBy, parentSearchValue, PropertyExpressionOperator.Contains);
+                                            }
+                                            UIcurrentparent = uiwindow;
+                                        }
+                                        else if (pTechnology == "uia")
+                                        {
+                                            WpfWindow uiwindow = new WpfWindow();
+                                            if (pOperator == "=")
+                                            {
+                                                uiwindow.SearchProperties.Add(parentSearchBy, parentSearchValue);
+                                            }
+                                            else if (pOperator == "~")
+                                            {
+                                                uiwindow.SearchProperties.Add(parentSearchBy, parentSearchValue, PropertyExpressionOperator.Contains);
+                                            }
+                                            UIcurrentparent = uiwindow;
+
                                         }
                                     }
-                                    else if (cOperator == "~")
+                                    catch (Exception ex)
                                     {
-                                        ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                        hlp.LogtoTextFile("error occured" + ex.Message);
                                     }
-
-                                    if (controlValue.Length > 0)
-                                    {
-
-                                        Mouse.Click(ucntl);
-                                    }
+                                    break;
                                 }
-                                #endregion 
-                                else if (technologyControl == "UIA")
+                            #endregion
+
+                            #region client
+                            case "client":
                                 {
-                                    // to do
-                                }
-                                #region Webbutton
-                                else if (technologyControl == "Web")
-                                {
-                                    HtmlButton ucntl= new HtmlButton(UIcurrentparent);
-                                    if (cOperator == "=")
+                                    if (pTechnology.ToLower() == "msaa")
                                     {
-                                        ucntl.SearchProperties.Add(searchBy, searchValue);
-                                        if (index.Length > 0)
+                                        WinClient uicleint = new WinClient(UIcurrentparent);
+                                        if (pOperator == "=")
                                         {
-                                            ucntl.SearchProperties.Add("TagInstance", index);
+                                            uicleint.SearchProperties.Add(parentSearchBy, parentSearchValue);
+                                        }
+                                        else if (pOperator == "~")
+                                        {
+                                            uicleint.SearchProperties.Add(parentSearchBy, parentSearchValue, PropertyExpressionOperator.Contains);
+                                        }
+                                        UIcurrentparent = uicleint;
+                                    }
+                                    else if (pTechnology.ToLower() == "uia")
+                                    {
+                                        // to do
+                                    }
+                                    break;
+                                }
+                            #endregion
+
+                            #region docuemnt
+                            case "document":
+                                {
+                                    if (pTechnology.ToLower() == "web")
+                                    {
+                                        HtmlDocument uidoc = new HtmlDocument(UIcurrentparent);
+                                        if (pOperator == "=")
+                                        {
+                                            uidoc.SearchProperties.Add(parentSearchBy, parentSearchValue);
+                                        }
+                                        else if (pOperator == "~")
+                                        {
+                                            uidoc.SearchProperties.Add(parentSearchBy, parentSearchValue, PropertyExpressionOperator.Contains);
+                                        }
+                                        UIcurrentparent = uidoc;
+                                    }
+                                    else if (pTechnology.ToLower() == "uia")
+                                    {
+
+                                        // to do
+                                    }
+                                    break;
+                                }
+
+                            #endregion
+                            #region Pane
+                            case "pane":
+                                {
+
+                                    if (pTechnology.ToLower() == "web")
+                                    {
+                                        HtmlControl pane = new HtmlControl(UIcurrentparent);
+                                        if (pOperator == "=")
+                                        {
+                                            pane.SearchProperties.Add(parentSearchBy, parentSearchValue);
+                                        }
+                                        else if (pOperator == "~")
+                                        {
+                                            pane.SearchProperties.Add(parentSearchBy, parentSearchValue, PropertyExpressionOperator.Contains);
+                                        }
+                                        UIcurrentparent = pane;
+                                    }
+                                    else if (pTechnology.ToLower() == "uia")
+                                    {
+
+                                        // to do
+                                    }
+                                    break;
+                                }
+                            #endregion
+                            #region Custom
+                            case "custom":
+                                {
+
+                                    if (pTechnology.ToLower() == "web")
+                                    {
+                                        HtmlCustom uicustm = new HtmlCustom(UIcurrentparent);
+                                        if (pOperator == "=")
+                                        {
+                                            uicustm.SearchProperties.Add(parentSearchBy, parentSearchValue);
+                                        }
+                                        else if (pOperator == "~")
+                                        {
+                                            uicustm.SearchProperties.Add(parentSearchBy, parentSearchValue, PropertyExpressionOperator.Contains);
+                                        }
+                                        UIcurrentparent = uicustm;
+                                    }
+                                    else if (pTechnology.ToLower() == "uia")
+                                    {
+
+                                        // to do
+                                    }
+                                    break;
+                                }
+                            #endregion
+
+                        }
+                    }
+                    if (controlType.Length > 0)
+                    {
+                        switch (controlType.ToLower())
+                        {
+                            #region edit
+                            case "edit":
+                                {
+                                    if (technologyControl.ToLower() == "msaa")
+                                    {
+                                        WinEdit uiedit = new WinEdit(UIcurrentparent);
+                                        if (cOperator == "=")
+                                        {
+                                            uiedit.SearchProperties.Add(searchBy, searchValue);
+                                        }
+                                        else if (cOperator == "~")
+                                        {
+                                            uiedit.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                        }
+
+                                        if (controlValue.Length > 0)
+                                        {
+
+                                            uiedit.Text = controlValue;
                                         }
                                     }
-                                    else if (cOperator == "~")
+                                    else if (technologyControl == "UIA")
                                     {
-                                        ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                        // to do
+                                    }
+                                    else if (technologyControl == "Web")
+                                    {
+                                        HtmlEdit uiedit = new HtmlEdit(UIcurrentparent);
+                                        if (cOperator == "=")
+                                        {
+                                            uiedit.SearchProperties.Add(searchBy, searchValue);
+                                        }
+                                        else if (cOperator == "~")
+                                        {
+                                            uiedit.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                        }
+
+                                        if (controlValue.Length > 0)
+                                        {
+
+                                            uiedit.Text = controlValue;
+                                        }
                                     }
 
-                                    if (controlValue.Length > 0)
+
+
+                                    break;
+                                }
+                            #endregion
+                            #region button
+                            case "button":
+                                {
+                                    #region MSAAAButton
+                                    try
                                     {
-                                        
-                                        Mouse.Click(ucntl);
+                                        if (technologyControl == "MSAA")
+                                        {
+                                            if (UIcurrentparent.Exists)
+                                            {
+                                                WinButton ucntl = new WinButton(UIcurrentparent);
+                                                if (cOperator == "=")
+                                                {
+                                                    ucntl.SearchProperties.Add(searchBy, searchValue);
+                                                    if (index.Length > 0)
+                                                    {
+                                                        ucntl.SearchProperties.Add("Instance", index);
+                                                    }
+                                                }
+                                                else if (cOperator == "~")
+                                                {
+                                                    ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                                }
+
+                                                if (controlValue.Length > 0)
+                                                {
+                                                    //  System.Drawing.Point p = new System.Drawing.Point(ucntl.BoundingRectangle.X,ucntl.BoundingRectangle.Y);
+                                                    //   bool isvisible = ucntl.TryGetClickablePoint(out p);
+                                                    Mouse.Click(ucntl);
+                                                    hlp.LogtoTextFile(string.Format("Clicked Button {0}", field));
+                                                }
+                                            }
+                                            else
+                                            {
+                                                hlp.LogtoTextFile("Parent of Control button was not constructed: Hence  Any Actions on this control are not peformed] ");
+                                            }
+                                        }
+                                    #endregion
+                                        else if (technologyControl == "UIA")
+                                        {
+                                            // to do
+                                        }
+                                        #region Webbutton
+                                        else if (technologyControl == "Web")
+                                        {
+                                            if (UIcurrentparent.Exists)
+                                            {
+                                                HtmlButton ucntl = new HtmlButton(UIcurrentparent);
+                                                if (cOperator == "=")
+                                                {
+                                                    ucntl.SearchProperties.Add(searchBy, searchValue);
+                                                    if (index.Length > 0)
+                                                    {
+                                                        ucntl.SearchProperties.Add("TagInstance", index);
+                                                    }
+                                                }
+                                                else if (cOperator == "~")
+                                                {
+                                                    ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                                }
+                                                if (ucntl.Exists)
+                                                {
+                                                    if (controlValue.Length > 0)
+                                                    {
+
+                                                        Mouse.Click(ucntl);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    hlp.LogtoTextFile("Unable to Construct Control Button: [ Any Actions on this control are not peformed] ");
+                                                }
+                                            }
+                                        }
+                                        #endregion
+
                                     }
-                                }
-                                #endregion
+                                    catch (Exception ex)
+                                    {
+                                        hlp.LogtoTextFile("error while construcitng button [ UI may not exist ] " + ex.Message);
+                                    }
 
-                                #region ActionDefined
-                                if (action == "dwait")
-                                {
-                                    Playback.Wait(1000);
-                                    Lowis_Reports_Testing.ObjectLibrary.LowisMainWindow lmain = new Lowis_Reports_Testing.ObjectLibrary.LowisMainWindow();
-                                    lmain.lowisDwait();
-                                    Playback.Wait(1000);
-                                }
-                                #endregion
-                                break;
-                            }
-                        #endregion
-                        #region image
-                        case "image":
-                            {
 
-                                try
+                                    break;
+                                }
+                            #endregion
+                            #region image
+                            case "image":
                                 {
 
+                                    try
+                                    {
+
+                                        if (technologyControl == "MSAA")
+                                        {
+                                            // to do
+                                        }
+                                        else if (technologyControl == "UIA")
+                                        {
+                                            // to do
+                                        }
+                                        else if (technologyControl == "Web")
+                                        {
+                                            HtmlImage ucntl = new HtmlImage(UIcurrentparent);
+                                            if (cOperator == "=")
+                                            {
+                                                ucntl.SearchProperties.Add(searchBy, searchValue);
+                                                if (index.Length > 0)
+                                                {
+                                                    ucntl.SearchProperties.Add("TagInstance", index);
+                                                }
+                                            }
+                                            else if (cOperator == "~")
+                                            {
+                                                ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                            }
+
+                                            if (controlValue.Length > 0)
+                                            {
+
+                                                Mouse.Click(ucntl);
+                                            }
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        hlp.LogtoTextFile("Exception frmo Control Type = Image " + "  Field Name : " + field + "Mesage: " + ex.Message);
+                                    }
+                                    break;
+                                }
+                            #endregion
+                            #region Dropdown
+                            case "dropdown":
+                                {
                                     if (technologyControl == "MSAA")
                                     {
                                         // to do
@@ -292,7 +427,108 @@ namespace Lowis_Reports_Testing.StructureSheet
                                     }
                                     else if (technologyControl == "Web")
                                     {
-                                        HtmlImage ucntl = new HtmlImage(UIcurrentparent);
+                                        HtmlComboBox ucntl = new HtmlComboBox(UIcurrentparent);
+                                        if (cOperator == "=")
+                                        {
+                                            if (searchValue.Length > 0)
+                                            {
+                                                ucntl.SearchProperties.Add(searchBy, searchValue);
+                                            }
+                                            if (index.Length > 0)
+                                            {
+                                                ucntl.SearchProperties.Add("TagInstance", index);
+                                            }
+                                        }
+                                        else if (cOperator == "~")
+                                        {
+                                            ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                        }
+
+                                        if (controlValue.Length > 0)
+                                        {
+
+                                            ucntl.SelectedItem = controlValue;
+                                            if (ucntl.SelectedItem != controlValue)
+                                            {
+                                                hlp.LogtoTextFile("Issue Encountered in setting combobox value");
+                                            }
+                                            else
+                                            {
+                                                hlp.LogtoTextFile("Entered Value in ComboBox");
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            #endregion
+                            #region TreeItem
+                            case "treeitem":
+                                {
+                                    if (technologyControl == "MSAA")
+                                    {
+                                        WinTreeItem ucntl = new WinTreeItem(UIcurrentparent);
+                                        if (cOperator == "=")
+                                        {
+                                            ucntl.SearchProperties.Add(searchBy, searchValue);
+                                            if (index.Length > 0)
+                                            {
+                                                ucntl.SearchProperties.Add("Instance", index);
+                                            }
+                                        }
+                                        else if (cOperator == "~")
+                                        {
+                                            ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                        }
+
+                                        if (controlValue.Length > 0)
+                                        {
+
+                                            Mouse.Click(ucntl);
+                                        }
+                                    }
+                                    else if (technologyControl == "UIA")
+                                    {
+                                        // to do
+                                    }
+                                    else if (technologyControl == "Web")
+                                    {
+
+                                    }
+                                    break;
+                                }
+                            #endregion
+                            #region FileInput
+                            case "fileinput":
+                                {
+                                    if (technologyControl == "MSAA")
+                                    {
+                                        WinButton ucntl = new WinButton(UIcurrentparent);
+                                        if (cOperator == "=")
+                                        {
+                                            ucntl.SearchProperties.Add(searchBy, searchValue);
+                                            if (index.Length > 0)
+                                            {
+                                                ucntl.SearchProperties.Add("Instance", index);
+                                            }
+                                        }
+                                        else if (cOperator == "~")
+                                        {
+                                            ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                        }
+
+                                        if (controlValue.Length > 0)
+                                        {
+
+                                            Mouse.Click(ucntl);
+                                        }
+                                    }
+                                    else if (technologyControl == "UIA")
+                                    {
+                                        // to do
+                                    }
+                                    else if (technologyControl == "Web")
+                                    {
+                                        HtmlFileInput ucntl = new HtmlFileInput(UIcurrentparent);
                                         if (cOperator == "=")
                                         {
                                             ucntl.SearchProperties.Add(searchBy, searchValue);
@@ -308,213 +544,326 @@ namespace Lowis_Reports_Testing.StructureSheet
 
                                         if (controlValue.Length > 0)
                                         {
-
                                             Mouse.Click(ucntl);
+                                            ucntl.FileName = controlValue;
+
                                         }
                                     }
+                                    break;
                                 }
-                                catch (Exception ex)
+                            #endregion
+                            #region UPane
+                            case "upane":
                                 {
-                                    hlp.LogtoTextFile("Exception frmo Control Type = Image " + "  Field Name : " + field + "Mesage: "+ex.Message);
+                                    AutomationElement reqlblelem = null;
+                                    #region ConstructObjectCollection
+                                    if (inmemlist == false)
+                                    {
+                                        AutomationElement rootelem = AutomationElement.RootElement;
+                                        Condition CondSysDateTimePick32 = null;
+                                        switch (searchBy.ToLower())
+                                        {
+                                            case "classname":
+                                                {
+                                                    CondSysDateTimePick32 = new AndCondition(
+
+                                                       new System.Windows.Automation.PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.Pane),
+                                                       new System.Windows.Automation.PropertyCondition(AutomationElement.ClassNameProperty, searchValue)
+                                                           );
+                                                    break;
+                                                }
+                                        }
+                                        for (int tk = 0; tk < 15; tk++)
+                                        {
+                                            objcol = rootelem.FindAll(TreeScope.Descendants, CondSysDateTimePick32);
+                                            Thread.Sleep(1000);
+                                            if (objcol.Count > 0)
+                                            {
+                                                hlp.LogtoTextFile(string.Format("Upane:  found in {0} Attempt....", tk));
+                                                break;
+                                            }
+                                        }
+
+                                        // get collection for Label Texts Or simply Control Type Text labels
+
+                                        AutomationElement dlgwindow = rootelem.FindFirst(TreeScope.Descendants,
+                                            new AndCondition(new PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.Window),
+                                                            (new PropertyCondition(AutomationElement.ClassNameProperty, "#32770")
+                                                            )));
+
+                                        Condition ConditionLabelSearch = null;
+                                        ConditionLabelSearch =
+                                                       new System.Windows.Automation.PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.Text);
+                                        objcol2 = dlgwindow.FindAll(TreeScope.Descendants, ConditionLabelSearch);
+
+                                    }
+                                    #endregion
+                                    #region SearchByLabel
+                                    if (searchBy2 == "label") //do search using labels wherever possible 
+                                    {
+                                        hlp.LogtoTextFile("Upane:  Searching by label....");
+                                        foreach (AutomationElement lbl in objcol2)
+                                        {
+                                            if (lbl.Current.Name == searchValue2)
+                                            {
+                                                reqlblelem = lbl; // wefound required label 
+                                                break;
+                                            }
+                                        }
+                                        hlp.LogtoTextFile(string.Format("Y cordinate of Label {0} was {1}", searchValue2, reqlblelem.Current.BoundingRectangle.Y));
+                                        double lwoffset = reqlblelem.Current.BoundingRectangle.Y - 5;
+                                        double hioffset = reqlblelem.Current.BoundingRectangle.Y + 5;
+                                        foreach (AutomationElement cntll in objcol)
+                                        {
+                                            hlp.LogtoTextFile(string.Format("Y cordinate of control {0} was {1}", searchValue2, cntll.Current.BoundingRectangle.Y));
+                                            if ((cntll.Current.BoundingRectangle.Y > lwoffset) && (cntll.Current.BoundingRectangle.Y < hioffset))
+                                            {
+                                                paneobject = cntll; // wefound required label 
+                                                break;
+                                            }
+                                        }
+                                        if (paneobject != null)
+                                        {
+                                            ClickElement(paneobject, action);
+                                            if (controlValue.Length > 0)
+                                            {
+                                                if (searchValue.ToLower() == "pvmaskedit")
+                                                {
+                                                    Keyboard.SendKeys("{Home}");
+                                                    Keyboard.SendKeys("+{End}");
+                                                    Keyboard.SendKeys("{Del}");
+                                                    Playback.Wait(1000);
+                                                }
+                                                Keyboard.SendKeys(controlValue);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            hlp.LogtoTextFile("Unable to find desired UIautomation Pane using label as searchby2");
+                                        }
+
+                                    }
+                                    #endregion
+                                    #region SearchByIndex
+                                    else //else  search using indexs if not searchable by label
+                                    {
+                                        hlp.LogtoTextFile("U pane Searching by Index");
+                                        if (objcol.Count > 0)
+                                        {
+                                            if (index.Length > 0)
+                                            {
+                                                paneobject = objcol[Int32.Parse(index)];
+                                            }
+                                            else
+                                            {
+                                                paneobject = objcol[0];
+                                            }
+                                            ClickElement(paneobject, action);
+                                            if (controlValue.Length > 0)
+                                            {
+                                                if (searchValue.ToLower() == "pvmaskedit")
+                                                {
+                                                    Keyboard.SendKeys("{Home}");
+                                                    Keyboard.SendKeys("+{End}");
+                                                    Keyboard.SendKeys("{Del}");
+                                                    Playback.Wait(1000);
+                                                }
+                                                Keyboard.SendKeys(controlValue);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            hlp.LogtoTextFile("Unable to find desired UIautomation Pane");
+                                        }
+                                    }
+                                    #endregion
                                 }
                                 break;
-                            }
-                        #endregion
-                        #region Dropdown
-                        case "dropdown" :
-                            {
-                                if (technologyControl == "MSAA")
+                            #endregion
+                            #region text
+                            #endregion
+                            #region Lowis_pvmaskedit
+                            case "pvmaskedit":
                                 {
-                                    // to do
-                                }
-                                else if (technologyControl == "UIA")
-                                {
-                                    // to do
-                                }
-                                else if (technologyControl == "Web")
-                                {
-                                    HtmlComboBox ucntl = new HtmlComboBox(UIcurrentparent);
-                                    if (cOperator == "=" )
+                                    WinClient pvmaskedit = null;
+                                    if (inmemlist == false) //construct List only once ...
                                     {
-                                        if (searchValue.Length > 0)
+
+                                        UITestControlCollection ucol1 = UIcurrentparent.GetChildren();
+                                        UITestControlCollection ucol2 = ucol1[1].GetChildren();
+                                        UITestControlCollection ucol3 = ucol2[0].GetChildren();
+                                        UITestControlCollection ucol4 = ucol3[0].GetChildren();
+                                        UITestControlCollection ucol5 = ucol4[0].GetChildren();
+                                        UITestControlCollection ucol6 = ucol5[0].GetChildren();
+                                        foreach (UITestControl ictl2 in ucol6)
                                         {
-                                            ucntl.SearchProperties.Add(searchBy, searchValue);
+                                            UITestControlCollection ucol7 = ictl2.GetChildren();
+                                            UITestControlCollection ucol8 = ucol7[1].GetChildren();
+                                            foreach (UITestControl in33 in ucol8)
+                                            {
+                                                UITestControlCollection ucol9 = in33.GetChildren();
+                                                foreach (UITestControl in9 in ucol9)
+                                                {
+
+                                                    hlp.LogtoTextFile("Found control with control type " + in9.ControlType.ToString());
+                                                    hlp.LogtoTextFile("Found control with clasanme: " + in9.ClassName.ToString());
+                                                    try
+                                                    {
+                                                        pvmasks.Add(in9.GetChildren()[3].GetChildren()[0].GetChildren()[3]);
+                                                        hlp.LogtoTextFile("added Control " + in9.GetChildren()[3].GetChildren()[0].GetChildren()[3].ControlType.ToString());
+                                                    }
+                                                    catch
+                                                    {
+                                                    }
+
+                                                }
+                                            }
+
+
                                         }
-                                        if (index.Length > 0)
+                                        inmemlist = true;
+                                    }
+
+
+                                    for (int it = 0; it < pvmasks.Count; it++)
+                                    {
+                                        if (it == Int32.Parse(index) && pvmasks[it].ControlType.ToString() == "Client")
                                         {
-                                            ucntl.SearchProperties.Add("TagInstance", index);
-                                        }
-                                    }
-                                    else if (cOperator == "~")
-                                    {
-                                        ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
-                                    }
-
-                                    if (controlValue.Length > 0)
-                                    {
-
-                                        ucntl.SelectedItem = controlValue;
-                                        hlp.LogtoTextFile("Entered Value in ComboBox");
-                                    }
-                                }
-                                break;
-                            }
-                        #endregion 
-                        #region TreeItem
-                        case "treeitem" :
-                            {
-                                if (technologyControl == "MSAA")
-                                {
-                                    WinTreeItem ucntl = new WinTreeItem(UIcurrentparent);
-                                    if (cOperator == "=")
-                                    {
-                                        ucntl.SearchProperties.Add(searchBy, searchValue);
-                                        if (index.Length > 0)
-                                        {
-                                            ucntl.SearchProperties.Add("Instance", index);
-                                        }
-                                    }
-                                    else if (cOperator == "~")
-                                    {
-                                        ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
-                                    }
-
-                                    if (controlValue.Length > 0)
-                                    {
-
-                                        Mouse.Click(ucntl);
-                                    }
-                                }
-                                else if (technologyControl == "UIA")
-                                {
-                                    // to do
-                                }
-                                else if (technologyControl == "Web")
-                                {
-
-                                }
-                                break;
-                            }
-                        #endregion
-                        #region FileInput
-                        case "fileinput":
-                            {
-                                if (technologyControl == "MSAA")
-                                {
-                                    WinButton ucntl = new WinButton(UIcurrentparent);
-                                    if (cOperator == "=")
-                                    {
-                                        ucntl.SearchProperties.Add(searchBy, searchValue);
-                                        if (index.Length > 0)
-                                        {
-                                            ucntl.SearchProperties.Add("Instance", index);
-                                        }
-                                    }
-                                    else if (cOperator == "~")
-                                    {
-                                        ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
-                                    }
-
-                                    if (controlValue.Length > 0)
-                                    {
-
-                                        Mouse.Click(ucntl);
-                                    }
-                                }
-                                else if (technologyControl == "UIA")
-                                {
-                                    // to do
-                                }
-                                else if (technologyControl == "Web")
-                                {
-                                    HtmlFileInput ucntl = new HtmlFileInput(UIcurrentparent);
-                                    if (cOperator == "=")
-                                    {
-                                        ucntl.SearchProperties.Add(searchBy, searchValue);
-                                        if (index.Length > 0)
-                                        {
-                                            ucntl.SearchProperties.Add("TagInstance", index);
-                                        }
-                                    }
-                                    else if (cOperator == "~")
-                                    {
-                                        ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
-                                    }
-
-                                    if (controlValue.Length > 0)
-                                    {
-                                        Mouse.Click(ucntl);
-                                        ucntl.FileName = controlValue;
-                                       
-                                    }
-                                }
-                                break;
-                            }
-                        #endregion
-                        #region UPane
-                             case "upane":
-                            {
-                                AutomationElement rootelem = AutomationElement.RootElement;
-                                AutomationElement paneobject = null;
-                                Condition CondSysDateTimePick32 = null;
-                                switch(searchBy.ToLower())
-                                {
-                                    case "classname":
-                                        {
-                                            CondSysDateTimePick32 = new AndCondition(
-
-                                               new System.Windows.Automation.PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.Pane),
-                                               new System.Windows.Automation.PropertyCondition(AutomationElement.ClassNameProperty, searchValue)
-                                                   );
+                                            pvmaskedit = pvmasks[it] as WinClient;
                                             break;
                                         }
-                                }
 
-                                AutomationElementCollection objcol = rootelem.FindAll(TreeScope.Descendants, CondSysDateTimePick32);
-                                if (index.Length > 0)
+                                    }
+                                    pvmaskedit.SetFocus();
+                                    //  pvmaskedit.DrawHighlight();
+                                    System.Drawing.Point p = new System.Drawing.Point(pvmaskedit.BoundingRectangle.X, pvmaskedit.BoundingRectangle.Y);
+                                    bool controlexist = pvmaskedit.TryGetClickablePoint(out p);
+                                    if (controlexist)
+                                    {
+                                        System.Diagnostics.Trace.WriteLine("control detected Trying to click ");
+                                        hlp.LogtoTextFile("control detected Trying to click ");
+                                        Mouse.Click();
+                                        Keyboard.SendKeys(controlValue);
+                                    }
+                                    else
+                                    {
+                                        hlp.LogtoTextFile(string.Format("Unable to detect Control pvmakedit using index {0}", index));
+                                    }
+
+                                    break;
+                                }
+                            #endregion
+                            #region UPvcomboBox
+                            case "upvcombobox":
                                 {
-                                    paneobject = objcol[Int32.Parse(index)];
+                                    //UITestControlCollection ucol = UIcurrentparent.GetChildren().OfType<WinComboBox>() as UITestControlCollection;
+                                    // hlp.LogtoTextFile("got count f collection of wincomboboxes:" + ucol.Count);
+                                    AutomationElement reqlblelem = null;
+                                    hlp.LogtoTextFile("Upane:  Searching by label....");
+                                    foreach (AutomationElement lbl in objcol2)
+                                    {
+                                        if (lbl.Current.Name == searchValue2)
+                                        {
+                                            reqlblelem = lbl; // wefound required label 
+                                            break;
+                                        }
+                                    }
+                                    hlp.LogtoTextFile(string.Format("Y cordinate of Label {0} was {1}", searchValue2, reqlblelem.Current.BoundingRectangle.Y));
+                                    double lwoffset = reqlblelem.Current.BoundingRectangle.Y - 5;
+                                    double hioffset = reqlblelem.Current.BoundingRectangle.Y + 5;
+                                    AutomationElement reqcmb = null;
+                                    AutomationElement rootelem = AutomationElement.RootElement;
+                                    Condition CondPVCombo = null;
+                                    switch (searchBy.ToLower())
+                                    {
+                                        case "classname":
+                                            {
+                                                CondPVCombo = new System.Windows.Automation.PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.ComboBox);
+                                                for (int tk = 0; tk < 15; tk++)
+                                                {
+                                                    objcol = rootelem.FindAll(TreeScope.Descendants, CondPVCombo);
+                                                    Thread.Sleep(1000);
+                                                    if (objcol.Count > 0)
+                                                    {
+                                                        hlp.LogtoTextFile(string.Format("Upane:  found in {0} Attempt....", tk));
+                                                        break;
+                                                    }
+                                                }
+
+                                                foreach (AutomationElement indcmb in objcol)
+                                                {
+                                                    if ((indcmb.Current.ClassName.Contains(searchValue)) && (indcmb.Current.BoundingRectangle.Y > lwoffset) && (indcmb.Current.BoundingRectangle.Y < hioffset))
+                                                    {
+                                                        reqcmb = indcmb;
+                                                        break;
+                                                    }
+                                                }
+                                                break;
+                                            }
+                                    }
+                                    comboboxclick(reqcmb, controlValue);
+                                    break;
+
                                 }
-                                else
-                                {
-                                    paneobject = objcol[0];
-                                }
-                                ClickElement(paneobject,action);
-                                if (controlValue.Length > 0)
-                                {
-                                    Keyboard.SendKeys(controlValue);
-                                }
-                               
-                                }
-                                break;
-                        #endregion
+                            #endregion
+                        }
                     }
+                    #region ActionDefined
+                    switch (action.ToLower())
+                    {
+
+                        case "dwait":
+                            {
+
+                                Playback.Wait(1000);
+                                Lowis_Reports_Testing.ObjectLibrary.LowisMainWindow lmain = new Lowis_Reports_Testing.ObjectLibrary.LowisMainWindow();
+                                lmain.lowisDwait();
+                                Playback.Wait(1000);
+                                break;
+                            }
+                        case "keystroke":
+                            {
+                                System.Windows.Forms.SendKeys.SendWait(controlValue);
+                                break;
+                            }
+
+                        case "wait":
+                            {
+                                Playback.Wait(Int32.Parse(controlValue) * 1000);
+                                break;
+                            }
+                    }
+                    #endregion
+
+
+
+
+
+
+
+
                 }
-
-
-
-
-
-
-
-
+            }
+            catch (Exception ex)
+            {
+                hlp.LogtoTextFile("generic error in AddData" + ex.Message);
             }
 
 
         }
 
-        public void ClickElement(AutomationElement el ,string actiontype)
+        public void ClickElement(AutomationElement el, string actiontype)
         {
-            double lx =   el.Current.BoundingRectangle.Left;
-            double lt =   el.Current.BoundingRectangle.Top;
+            double lx = el.Current.BoundingRectangle.Left;
+            double lt = el.Current.BoundingRectangle.Top;
             System.Drawing.Point pt;
             System.Windows.Point wpt;
 
             if (actiontype == "clickoffset")
             {
-                 pt = new System.Drawing.Point(Convert.ToInt32(lx) + 20, Convert.ToInt32(lt) + 20);
+                pt = new System.Drawing.Point(Convert.ToInt32(lx) + 20, Convert.ToInt32(lt) + 20);
             }
-            else if (actiontype == "clickcentre")
+            else if (actiontype == "clickcentre" || actiontype.Length == 0)
             {
                 wpt = el.GetClickablePoint();
                 lx = wpt.X;
@@ -527,5 +876,90 @@ namespace Lowis_Reports_Testing.StructureSheet
             }
             Mouse.Click(pt);
         }
+
+        public void comboboxclick(AutomationElement el, string _controlValue)
+        {
+            try
+            {
+                hlp.LogtoTextFile("Inside combox function=======");
+                System.Drawing.Point p2 = new System.Drawing.Point(Convert.ToInt32(el.Current.BoundingRectangle.X), Convert.ToInt32(el.Current.BoundingRectangle.Y));
+                Mouse.Click(p2);
+                Thread.Sleep(2000);
+                WinWindow cmbwin = new WinWindow();
+                cmbwin.SearchProperties.Add(WinWindow.PropertyNames.Name, "ComboBox");
+                while (cmbwin.Exists == false)
+                {
+                    hlp.LogtoTextFile("Did not get Combobx UI after clicking on Dropdown Retryuing  again =======");
+                    Mouse.Click(p2);
+                    Playback.Wait(2000);
+                }
+                hlp.LogtoTextFile("List obtained Confirmd");
+                hlp.LogtoTextFile("Try Construct Element to click using AUelem collection");
+                AutomationElement ae = AutomationElement.RootElement;
+                Condition cond = new System.Windows.Automation.AndCondition(
+                    new System.Windows.Automation.PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.Window),
+                    new System.Windows.Automation.PropertyCondition(AutomationElement.NameProperty, "ComboBox", PropertyConditionFlags.IgnoreCase)
+                    );
+                AutomationElement cmbowin = ae.FindFirst(TreeScope.Descendants, cond);
+                if (cmbwin != null)
+                {
+                    Condition cond2 =
+                       new System.Windows.Automation.PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.DataItem);
+                    AutomationElementCollection alldataitems = cmbowin.FindAll(TreeScope.Descendants, cond2);
+                    if (alldataitems.Count > 0)
+                    {
+                        hlp.LogtoTextFile("Got collection count =" + alldataitems.Count);
+                        System.Diagnostics.Trace.WriteLine("Got collection count =" + alldataitems.Count);
+                        foreach (AutomationElement inditem in alldataitems)
+                        {
+                            if (inditem.Current.Name == _controlValue)
+                            {
+                                InvokePattern invk = (InvokePattern)inditem.GetCurrentPattern(InvokePattern.Pattern);
+                                invk.Invoke();
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        hlp.LogtoTextFile("no dataimtes was invokved");
+                    }
+                }
+                else
+                {
+                    hlp.LogtoTextFile("Attempt to reinvoke comboobox faield");
+                }
+            }
+            catch (Exception ex)
+            {
+                hlp.LogtoTextFile("Exception "+ex.Message.ToString());
+            }
+
+        }
+
+        public bool IsColumnPresent(string colname, DataTable testData)
+        {
+            try
+            {
+                bool IsColumnPresent = false;
+                string colNameString = "";
+                for (int ic = 0; ic < testData.Columns.Count; ic++)
+                {
+                    colNameString = colNameString + testData.Columns[ic].Caption.ToString() + ";";
+                }
+                if (colNameString.Contains(colname))
+                {
+                    IsColumnPresent = true;
+                }
+
+                return IsColumnPresent;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
+
     }
 }
