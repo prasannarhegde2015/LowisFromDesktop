@@ -30,6 +30,7 @@ namespace Lowis_Reports_Testing.StructureSheet
                 DataTable dt2 = hlp.dtFromExcelFile(filename, "ExpectedData", "TestCase", testcase);
                 UITestControl UIcurrentparent = null;
                 bool inmemlist = false;
+                string inmemprevsearchvalue = "";
                 AutomationElementCollection objcol = null;
                 AutomationElementCollection objcol2 = null;
                 AutomationElement paneobject = null;
@@ -53,6 +54,10 @@ namespace Lowis_Reports_Testing.StructureSheet
                     string pOperator = dt1.Rows[i]["pOperator"].ToString();
                     string cOperator = dt1.Rows[i]["cOperator"].ToString();
                     string resetparent = dt1.Rows[i]["ResetParent"].ToString();
+                    if (i != 0)
+                    {
+                        inmemprevsearchvalue = dt1.Rows[i - 1]["SearchValue"].ToString();
+                    }
                     if (IsColumnPresent("SearchBy2", dt1))
                     {
                         searchBy2 = dt1.Rows[i]["SearchBy2"].ToString();
@@ -556,9 +561,18 @@ namespace Lowis_Reports_Testing.StructureSheet
                             case "upane":
                                 {
                                     AutomationElement reqlblelem = null;
+                                    if (searchValue == inmemprevsearchvalue)
+                                    {
+                                        inmemlist = true;
+                                    }
+                                    else
+                                    {
+                                        inmemlist = false;
+                                    }
                                     #region ConstructObjectCollection
                                     if (inmemlist == false)
                                     {
+                                        hlp.LogtoTextFile(string.Format("Inside One Time construction of collection of labels and controls "));
                                         AutomationElement rootelem = AutomationElement.RootElement;
                                         Condition CondSysDateTimePick32 = null;
                                         switch (searchBy.ToLower())
@@ -595,30 +609,37 @@ namespace Lowis_Reports_Testing.StructureSheet
                                         ConditionLabelSearch =
                                                        new System.Windows.Automation.PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.Text);
                                         objcol2 = dlgwindow.FindAll(TreeScope.Descendants, ConditionLabelSearch);
+                                        hlp.LogtoTextFile(string.Format("SaerchBy and last asearchby valeus {0} {1}", searchValue, inmemprevsearchvalue));
+                                        
 
                                     }
                                     #endregion
                                     #region SearchByLabel
                                     if (searchBy2 == "label") //do search using labels wherever possible 
                                     {
-                                        hlp.LogtoTextFile("Upane:  Searching by label....");
+                                        hlp.LogtoTextFile("Upane:  Searching by label...."+ searchValue2);
+                                        hlp.LogtoTextFile(string.Format("Label Collection count: {0}", objcol2.Count));
                                         foreach (AutomationElement lbl in objcol2)
                                         {
+                                           // hlp.LogtoTextFile(string.Format("Got label bname as {0} ",lbl.Current.Name));
                                             if (lbl.Current.Name == searchValue2)
                                             {
                                                 reqlblelem = lbl; // wefound required label 
+                                                hlp.LogtoTextFile("Upane:  found label ..." + searchValue2);
                                                 break;
                                             }
                                         }
-                                        hlp.LogtoTextFile(string.Format("Y cordinate of Label {0} was {1}", searchValue2, reqlblelem.Current.BoundingRectangle.Y));
+                                      //  hlp.LogtoTextFile(string.Format("Y cordinate of Label {0} was {1}", searchValue2, reqlblelem.Current.BoundingRectangle.Y));
                                         double lwoffset = reqlblelem.Current.BoundingRectangle.Y - 5;
                                         double hioffset = reqlblelem.Current.BoundingRectangle.Y + 5;
+                                        hlp.LogtoTextFile(string.Format("Control  Collection count: {0}", objcol.Count));
                                         foreach (AutomationElement cntll in objcol)
                                         {
-                                            hlp.LogtoTextFile(string.Format("Y cordinate of control {0} was {1}", searchValue2, cntll.Current.BoundingRectangle.Y));
+                                         //   hlp.LogtoTextFile(string.Format("Y cordinate of control {0} was {1}", searchValue2, cntll.Current.BoundingRectangle.Y));
                                             if ((cntll.Current.BoundingRectangle.Y > lwoffset) && (cntll.Current.BoundingRectangle.Y < hioffset))
                                             {
-                                                paneobject = cntll; // wefound required label 
+                                                paneobject = cntll; // wefound required control
+                                                hlp.LogtoTextFile("Upane:  found contrl using label  ..." + searchValue2);
                                                 break;
                                             }
                                         }
@@ -639,7 +660,7 @@ namespace Lowis_Reports_Testing.StructureSheet
                                         }
                                         else
                                         {
-                                            hlp.LogtoTextFile("Unable to find desired UIautomation Pane using label as searchby2");
+                                            hlp.LogtoTextFile("Unable to find desired UIautomation Pane using label as "+searchValue2);
                                         }
 
                                     }
@@ -806,6 +827,52 @@ namespace Lowis_Reports_Testing.StructureSheet
 
                                 }
                             #endregion
+                            #region ScrollBar
+                            case "scrollbar":
+                                {
+                                    inmemlist = false; // we need to get visible control collection again
+                                     #region MSAAAScrollbar
+                                    try
+                                    {
+                                        if (technologyControl == "Web")
+                                        {
+                                            if (UIcurrentparent.Exists)
+                                            {
+                                                HtmlScrollBar ucntl = new HtmlScrollBar(UIcurrentparent);
+                                                if (cOperator == "=")
+                                                {
+                                                    ucntl.SearchProperties.Add(searchBy, searchValue);
+                                                    if (index.Length > 0)
+                                                    {
+                                                        ucntl.SearchProperties.Add("Instance", index);
+                                                    }
+                                                }
+                                                else if (cOperator == "~")
+                                                {
+                                                    ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                                }
+
+                                                if (controlValue.Length > 0)
+                                                {
+                                                    //  System.Drawing.Point p = new System.Drawing.Point(ucntl.BoundingRectangle.X,ucntl.BoundingRectangle.Y);
+                                                    //   bool isvisible = ucntl.TryGetClickablePoint(out p);
+                                                    ScrollSlide(ucntl, controlValue);
+                                                    hlp.LogtoTextFile(string.Format("Clicked Button {0}", field));
+                                                }
+                                            }
+                                            else
+                                            {
+                                                hlp.LogtoTextFile("Parent of Control button was not constructed: Hence  Any Actions on this control are not peformed] ");
+                                            }
+                                        }
+                                    }
+                                    catch
+                                    {
+                                    }
+                                     #endregion
+                                    break;
+                                }
+                            #endregion
                         }
                     }
                     #region ActionDefined
@@ -847,6 +914,7 @@ namespace Lowis_Reports_Testing.StructureSheet
             catch (Exception ex)
             {
                 hlp.LogtoTextFile("generic error in AddData" + ex.Message);
+                return;
             }
 
 
@@ -960,6 +1028,17 @@ namespace Lowis_Reports_Testing.StructureSheet
             }
 
         }
+        public void ScrollSlide(UITestControl scrollBar,string numberofclick)
+    {
+        System.Drawing.Point bottomOfScrollBar = new System.Drawing.Point(scrollBar.Left + (scrollBar.Width / 2), scrollBar.Top + (scrollBar.Height - (scrollBar.Height / 20)));
+
+        Mouse.Move(null, new System.Drawing.Point(scrollBar.Left + (scrollBar.Width / 2), scrollBar.Top + (scrollBar.Height - (scrollBar.Height / 15))));
+        Mouse.Move(null, bottomOfScrollBar );
+        for (int i = 0; i < Int32.Parse(numberofclick); i++)
+        {
+            Mouse.DoubleClick(null, bottomOfScrollBar);
+        }
+    }
 
     }
 }

@@ -55,7 +55,7 @@ namespace Lowis_Reports_Testing
                 {
                     lconndlg.usecredentails.Click();
                     lconndlg.txtuserName.Text = lowisusername;
-                    lconndlg.txtuserName.Text = lowispassword;
+                    lconndlg.txtPassword.Text = lowispassword;
                     lconndlg.Settings.Click();
                     lsettings.storepath.Text = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile).ToString(), "csstore", DateTime.Now.ToString("ddMMMyyyyhhmmss"));
                     lsettings.btnSavesettings.Click();

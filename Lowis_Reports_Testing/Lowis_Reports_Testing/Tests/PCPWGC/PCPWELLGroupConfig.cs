@@ -46,6 +46,7 @@ namespace Lowis_Reports_Testing
         #region PCPWGC
         [TestMethod, Description(@"PCPWGC")]
         [DeploymentItem(@"..\TestData\PCPConfig")]
+        [Timeout(TestTimeout.Infinite)]
 
         public void pcpwellgrpconfig()
         {
@@ -125,6 +126,9 @@ namespace Lowis_Reports_Testing
 
 
         #endregion
+       
+
+        
         
 
       

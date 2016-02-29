@@ -38,8 +38,8 @@ namespace Lowis_Reports_Testing.ObjectLibrary
         #endregion 
         #region Textboxes
         public CUITe_WpfEdit serverNametb { get { return this.serverName.Get<CUITe_WpfEdit>("Automationid=PART_EditableTextBox"); } }
-        public CUITe_WpfEdit txtuserName { get { return this.serverName.Get<CUITe_WpfEdit>("Automationid=PART_EditableTextBox"); } }
-        public CUITe_WpfEdit txtPassword { get { return this.serverName.Get<CUITe_WpfEdit>("Automationid=PART_EditableTextBox"); } }
+        public CUITe_WpfEdit txtuserName { get { return this.Get<CUITe_WpfEdit>("Instance=1"); } }
+        public CUITe_WpfEdit txtPassword { get { return this.Get<CUITe_WpfEdit>("Instance=2"); } }
         #endregion
         #region radiobuttons
        // Use the following credentials:
