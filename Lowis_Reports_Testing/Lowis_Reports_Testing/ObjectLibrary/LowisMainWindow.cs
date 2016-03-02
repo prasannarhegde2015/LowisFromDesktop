@@ -209,6 +209,8 @@ namespace Lowis_Reports_Testing.ObjectLibrary
         #endregion
         #region Wintabs
         public CUITe_WinTabPage wintaballseparatorreport { get { return Get<CUITe_WinTabPage>("Name=All Separator Reports"); } }
+        public CUITe_WinTabPage espconfigureparameters { get { return Get<CUITe_WinTabPage>("Name=Configure Parameters"); } }
+        public CUITe_WinTabPage esppumpconfig { get { return Get<CUITe_WinTabPage>("Name=Pump Configuration"); } }
         #endregion 
 
         #region WinList

@@ -374,6 +374,210 @@ namespace Lowis_Reports_Testing.StructureSheet
                                     break;
                                 }
                             #endregion
+                            #region checkbox
+                            case "checkbox":
+                                {
+                                    #region MSAAACheckbox
+                                    try
+                                    {
+                                        if (technologyControl == "MSAA")
+                                        {
+                                            if (UIcurrentparent.Exists)
+                                            {
+                                                WinCheckBox ucntl = new WinCheckBox(UIcurrentparent);
+                                                if (cOperator == "=")
+                                                {
+                                                    ucntl.SearchProperties.Add(searchBy, searchValue);
+                                                    if (index.Length > 0)
+                                                    {
+                                                        ucntl.SearchProperties.Add("Instance", index);
+                                                    }
+                                                }
+                                                else if (cOperator == "~")
+                                                {
+                                                    ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                                }
+
+                                                if (controlValue.Length > 0)
+                                                {
+                                                    //  System.Drawing.Point p = new System.Drawing.Point(ucntl.BoundingRectangle.X,ucntl.BoundingRectangle.Y);
+                                                    //   bool isvisible = ucntl.TryGetClickablePoint(out p);
+                                                    if (controlValue == "0")
+                                                    {
+                                                        ucntl.Checked = false;
+                                                    }
+                                                    else if (controlValue == "1")
+                                                    {
+                                                        ucntl.Checked = false;
+                                                    }
+                                                    else
+                                                    {
+                                                        hlp.LogtoTextFile(string.Format("Nocation for unsupported value {0}", controlValue));
+                                                    }
+                                                    hlp.LogtoTextFile(string.Format("Clicked Button {0}", field));
+                                                }
+                                            }
+                                            else
+                                            {
+                                                hlp.LogtoTextFile("Parent of Control button was not constructed: Hence  Any Actions on this control are not peformed] ");
+                                            }
+                                        }
+                                    #endregion
+                                        else if (technologyControl == "UIA")
+                                        {
+                                            // to do
+                                        }
+                                        #region WebbCheckbox
+                                        else if (technologyControl == "Web")
+                                        {
+                                            if (UIcurrentparent.Exists)
+                                            {
+                                                HtmlCheckBox ucntl = new HtmlCheckBox(UIcurrentparent);
+                                                if (cOperator == "=")
+                                                {
+                                                    ucntl.SearchProperties.Add(searchBy, searchValue);
+                                                    if (index.Length > 0)
+                                                    {
+                                                        ucntl.SearchProperties.Add("TagInstance", index);
+                                                    }
+                                                }
+                                                else if (cOperator == "~")
+                                                {
+                                                    ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                                }
+                                                if (ucntl.Exists)
+                                                {
+                                                    if (controlValue.Length > 0)
+                                                    {
+                                                        //  System.Drawing.Point p = new System.Drawing.Point(ucntl.BoundingRectangle.X,ucntl.BoundingRectangle.Y);
+                                                        //   bool isvisible = ucntl.TryGetClickablePoint(out p);
+                                                        if (controlValue == "0")
+                                                        {
+                                                            ucntl.Checked = false;
+                                                        }
+                                                        else if (controlValue == "1")
+                                                        {
+                                                            ucntl.Checked = false;
+                                                        }
+                                                        else
+                                                        {
+                                                            hlp.LogtoTextFile(string.Format("Nocation for unsupported value {0}", controlValue));
+                                                        }
+                                                        hlp.LogtoTextFile(string.Format("Clicked Button {0}", field));
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    hlp.LogtoTextFile("Unable to Construct Control Checkbox : [ Any Actions on this control are not peformed] ");
+                                                }
+                                            }
+                                        }
+                                        #endregion
+
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        hlp.LogtoTextFile("error while construcitng button [ UI may not exist ] " + ex.Message);
+                                    }
+
+
+                                    break;
+                                }
+                            #endregion
+                            #region radiobutton
+                            case "radiobutton":
+                                {
+                                    #region MSAAARadiobutton
+                                    try
+                                    {
+                                        if (technologyControl == "MSAA")
+                                        {
+                                            if (UIcurrentparent.Exists)
+                                            {
+                                                WinRadioButton ucntl = new WinRadioButton(UIcurrentparent);
+                                                if (cOperator == "=")
+                                                {
+                                                    ucntl.SearchProperties.Add(searchBy, searchValue);
+                                                    if (index.Length > 0)
+                                                    {
+                                                        ucntl.SearchProperties.Add("Instance", index);
+                                                    }
+                                                }
+                                                else if (cOperator == "~")
+                                                {
+                                                    ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                                }
+
+                                                if (controlValue.Length > 0)
+                                                {
+                                                    //  System.Drawing.Point p = new System.Drawing.Point(ucntl.BoundingRectangle.X,ucntl.BoundingRectangle.Y);
+                                                    //   bool isvisible = ucntl.TryGetClickablePoint(out p);
+                                                   
+                                                    hlp.LogtoTextFile(string.Format("Clicked Button {0}", field));
+                                                }
+                                            }
+                                            else
+                                            {
+                                                hlp.LogtoTextFile("Parent of Control button was not constructed: Hence  Any Actions on this control are not peformed] ");
+                                            }
+                                        }
+                                    #endregion
+                                        else if (technologyControl == "UIA")
+                                        {
+                                            // to do
+                                        }
+                                        #region WebbRadio
+                                        else if (technologyControl == "Web")
+                                        {
+                                            if (UIcurrentparent.Exists)
+                                            {
+
+                                                hlp.LogtoTextFile("Performing action on:  " + field);
+                                                HtmlRadioButton ucntl = new HtmlRadioButton(UIcurrentparent);
+                                                
+                                                if (cOperator == "=")
+                                                {
+                                                    ucntl.SearchProperties.Add(searchBy, searchValue);
+                                                    if (searchBy2 == "grouptext")
+                                                    {
+                                                        List<string> stringlist = searchValue2.Split(';').ToList<string>();
+                                                        int result = stringlist.FindIndex(X => (X == controlValue));
+                                                        hlp.LogtoTextFile("Got Id " + result);
+                                                        ucntl.SearchProperties.Add("id", result.ToString());
+                                                    }
+                                                    if (index.Length > 0)
+                                                    {
+                                                        ucntl.SearchProperties.Add("TagInstance", index);
+                                                    }
+                                                }
+                                                else if (cOperator == "~")
+                                                {
+                                                    ucntl.SearchProperties.Add(searchBy, searchValue, PropertyExpressionOperator.Contains);
+                                                }
+                                                if (ucntl.Exists)
+                                                {
+                                                    
+                                                 Mouse.Click(ucntl);           
+                                                        
+                                                }
+                                                else
+                                                {
+                                                    hlp.LogtoTextFile("Unable to Construct Control RadioButton : [ Any Actions on this control are not peformed] ");
+                                                }
+                                            }
+                                        }
+                                        #endregion
+
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        hlp.LogtoTextFile("error while construcitng button [ UI may not exist ] " + ex.Message);
+                                    }
+
+
+                                    break;
+                                }
+                            #endregion
                             #region image
                             case "image":
                                 {
@@ -451,7 +655,8 @@ namespace Lowis_Reports_Testing.StructureSheet
 
                                         if (controlValue.Length > 0)
                                         {
-
+                                            hlp.LogtoTextFile("web dropdown value to be selected " + controlValue);
+                                            hlp.LogtoTextFile("web dropdown value curently  selected in dropdown " + ucntl.SelectedItem);
                                             ucntl.SelectedItem = controlValue;
                                             if (ucntl.SelectedItem != controlValue)
                                             {
@@ -598,19 +803,20 @@ namespace Lowis_Reports_Testing.StructureSheet
                                             }
                                         }
 
-                                        // get collection for Label Texts Or simply Control Type Text labels
+                                        // get collection for Label Texts Or simply Control Type Text labels only for Dialogs not webpanes
+                                        if (searchValue.ToLower() == "pvmaskedit" || searchValue.ToLower() == "pvnumeric")
+                                        {
+                                            AutomationElement dlgwindow = rootelem.FindFirst(TreeScope.Descendants,
+                                                new AndCondition(new PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.Window),
+                                                                (new PropertyCondition(AutomationElement.ClassNameProperty, "#32770")
+                                                                )));
 
-                                        AutomationElement dlgwindow = rootelem.FindFirst(TreeScope.Descendants,
-                                            new AndCondition(new PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.Window),
-                                                            (new PropertyCondition(AutomationElement.ClassNameProperty, "#32770")
-                                                            )));
-
-                                        Condition ConditionLabelSearch = null;
-                                        ConditionLabelSearch =
-                                                       new System.Windows.Automation.PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.Text);
-                                        objcol2 = dlgwindow.FindAll(TreeScope.Descendants, ConditionLabelSearch);
-                                        hlp.LogtoTextFile(string.Format("SaerchBy and last asearchby valeus {0} {1}", searchValue, inmemprevsearchvalue));
-                                        
+                                            Condition ConditionLabelSearch = null;
+                                            ConditionLabelSearch =
+                                                           new System.Windows.Automation.PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.Text);
+                                            objcol2 = dlgwindow.FindAll(TreeScope.Descendants, ConditionLabelSearch);
+                                            hlp.LogtoTextFile(string.Format("SaerchBy and last asearchby valeus {0} {1}", searchValue, inmemprevsearchvalue));
+                                        }
 
                                     }
                                     #endregion
@@ -777,52 +983,83 @@ namespace Lowis_Reports_Testing.StructureSheet
                             #region UPvcomboBox
                             case "upvcombobox":
                                 {
-                                    //UITestControlCollection ucol = UIcurrentparent.GetChildren().OfType<WinComboBox>() as UITestControlCollection;
-                                    // hlp.LogtoTextFile("got count f collection of wincomboboxes:" + ucol.Count);
-                                    AutomationElement reqlblelem = null;
-                                    hlp.LogtoTextFile("Upane:  Searching by label....");
-                                    foreach (AutomationElement lbl in objcol2)
+                                    hlp.LogtoTextFile(string.Format("Inside upvcombobox"));
+                                    AutomationElement rootelem = AutomationElement.RootElement;
+                                    AutomationElement dlgwindow = null;
+                                    for (int ik = 0; ik < 15; ik++)
                                     {
-                                        if (lbl.Current.Name == searchValue2)
+                                        dlgwindow = rootelem.FindFirst(TreeScope.Descendants,
+                                                         new AndCondition(new PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.Window),
+                                                                         (new PropertyCondition(AutomationElement.ClassNameProperty, "#32770")
+                                                                         )));
+
+                                        if (dlgwindow != null)
                                         {
-                                            reqlblelem = lbl; // wefound required label 
                                             break;
                                         }
                                     }
-                                    hlp.LogtoTextFile(string.Format("Y cordinate of Label {0} was {1}", searchValue2, reqlblelem.Current.BoundingRectangle.Y));
-                                    double lwoffset = reqlblelem.Current.BoundingRectangle.Y - 5;
-                                    double hioffset = reqlblelem.Current.BoundingRectangle.Y + 5;
-                                    AutomationElement reqcmb = null;
-                                    AutomationElement rootelem = AutomationElement.RootElement;
-                                    Condition CondPVCombo = null;
-                                    switch (searchBy.ToLower())
-                                    {
-                                        case "classname":
-                                            {
-                                                CondPVCombo = new System.Windows.Automation.PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.ComboBox);
-                                                for (int tk = 0; tk < 15; tk++)
-                                                {
-                                                    objcol = rootelem.FindAll(TreeScope.Descendants, CondPVCombo);
-                                                    Thread.Sleep(1000);
-                                                    if (objcol.Count > 0)
-                                                    {
-                                                        hlp.LogtoTextFile(string.Format("Upane:  found in {0} Attempt....", tk));
-                                                        break;
-                                                    }
-                                                }
 
-                                                foreach (AutomationElement indcmb in objcol)
+                                    if (dlgwindow == null)
+                                    {
+                                        hlp.LogtoTextFile("Unable to get dialog window....");
+                                        return;
+                                    }
+                                        Condition ConditionLabelSearch = null;
+                                        ConditionLabelSearch =
+                                                       new System.Windows.Automation.PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.Text);
+                                        objcol2 = dlgwindow.FindAll(TreeScope.Descendants, ConditionLabelSearch);
+                                        hlp.LogtoTextFile(string.Format("SaerchBy and last asearchby valeus {0} {1}", searchValue, inmemprevsearchvalue));
+                                  //  }
+                                        if (objcol2.Count > 0)
+                                        {
+                                            AutomationElement reqlblelem = null;
+                                            hlp.LogtoTextFile("Upane:  Searching by label....");
+                                            foreach (AutomationElement lbl in objcol2)
+                                            {
+                                                if (lbl.Current.Name == searchValue2)
                                                 {
-                                                    if ((indcmb.Current.ClassName.Contains(searchValue)) && (indcmb.Current.BoundingRectangle.Y > lwoffset) && (indcmb.Current.BoundingRectangle.Y < hioffset))
+                                                    reqlblelem = lbl; // wefound required label 
+                                                    break;
+                                                }
+                                            }
+                                            hlp.LogtoTextFile(string.Format("Y cordinate of Label {0} was {1}", searchValue2, reqlblelem.Current.BoundingRectangle.Y));
+                                            double lwoffset = reqlblelem.Current.BoundingRectangle.Y - 5;
+                                            double hioffset = reqlblelem.Current.BoundingRectangle.Y + 5;
+                                            AutomationElement reqcmb = null;
+                                            Condition CondPVCombo = null;
+                                            switch (searchBy.ToLower())
+                                            {
+                                                case "classname":
                                                     {
-                                                        reqcmb = indcmb;
+                                                        CondPVCombo = new System.Windows.Automation.PropertyCondition(AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.ComboBox);
+                                                        for (int tk = 0; tk < 15; tk++)
+                                                        {
+                                                            objcol = rootelem.FindAll(TreeScope.Descendants, CondPVCombo);
+                                                            Thread.Sleep(1000);
+                                                            if (objcol.Count > 0)
+                                                            {
+                                                                hlp.LogtoTextFile(string.Format("Upane:  found in {0} Attempt....", tk));
+                                                                break;
+                                                            }
+                                                        }
+
+                                                        foreach (AutomationElement indcmb in objcol)
+                                                        {
+                                                            if ((indcmb.Current.ClassName.Contains(searchValue)) && (indcmb.Current.BoundingRectangle.Y > lwoffset) && (indcmb.Current.BoundingRectangle.Y < hioffset))
+                                                            {
+                                                                reqcmb = indcmb;
+                                                                break;
+                                                            }
+                                                        }
                                                         break;
                                                     }
-                                                }
-                                                break;
                                             }
-                                    }
-                                    comboboxclick(reqcmb, controlValue);
+                                            comboboxclick(reqcmb, controlValue);
+                                        }
+                                        else
+                                        {
+                                            hlp.LogtoTextFile("Upvcombobox : Unable to get label colection from above dialog....");
+                                        }
                                     break;
 
                                 }

@@ -30,7 +30,7 @@ namespace Lowis_Reports_Testing
         [TestInitialize]
         public void InitializeTest()
         {
-           // base.LaunchLowisServer();
+            base.LaunchLowisServer();
         }
         //-----------------------------
         #endregion
@@ -43,8 +43,8 @@ namespace Lowis_Reports_Testing
         }
         #endregion
 
-        #region BeamChartsViewer
-        [TestMethod, Description(@"Beam Charts Verification")]
+        #region ESPConfigureChildssdata
+        [TestMethod, Description(@"ESPConfigureChildssdata")]
         [DeploymentItem(@"..\TestData\ESPConfig")]
 
         public void espwellgrpconfig()
@@ -57,15 +57,16 @@ namespace Lowis_Reports_Testing
             {
 
                 string repeat = new string('=', 50);
-                hr.LogtoTextFile(repeat + "Test execution Started" + repeat);
-                //Lwindow.All.DoubleClick();
-                //Lwindow.AllWels.Click();
-                //Lwindow.WellTypes.DoubleClick();
-                //Lwindow.AllESPWells.Click();
-                //Lwindow.RefreshWells.Click();
-                //Lwindow.Start.WaitForControlReady();
-                //Lwindow.Start.Click();
-                //Lwindow.clickMenuitem(".Configuration", "ESP Well Group Configuration");
+                hr.LogtoTextFile(repeat + "Test execution Started"+TestContext.TestName+"  " + repeat);
+                Lwindow.All.DoubleClick();
+                Lwindow.AllWels.Click();
+                Lwindow.WellTypes.DoubleClick();
+                Lwindow.AllESPWells.Click();
+                Lwindow.RefreshWells.Click();
+                Lwindow.Start.WaitForControlReady();
+                Lwindow.Start.Click();
+                Lwindow.clickMenuitem(".Configuration", "ESP Well Group Configuration");
+                Lwindow.espconfigureparameters.Click();
                 //Select a Sepecific Well that can have good data to test these
               //  Lwindow.SelectWellfromSearch(srchWell1);
              //   DataTable dt = hr.dtFromExcelFile(System.IO.Directory.GetCurrentDirectory() + "\\BeamChartsLinksName.xls", "Sheet1", "ReportTabPage", "All");
@@ -82,11 +83,11 @@ namespace Lowis_Reports_Testing
                 }
 
               //  Lwindow.SelectWellfromSearch(srchWell1);
-               
-               
 
-                
-                hr.LogtoTextFile(repeat + "Test execution Ended" + repeat);
+
+
+
+                hr.LogtoTextFile(repeat + "Test execution Ended" + TestContext.TestName + "  " + repeat);
 
             }
             catch (Exception ex)
@@ -103,37 +104,119 @@ namespace Lowis_Reports_Testing
         }
         #endregion
 
-     //   [TestMethod]
-     //   public void getallhtmllinks()
-      /*  {
-            LReportPane lp2 = new LReportPane();
-            Helper hp1 = new Helper();
-            hp1.LogtoTextFile(lp2.getallhtmllinks());
-        } */
+        #region ESPWGC
+        [TestMethod, Description(@"ESPWGC")]
+        [DeploymentItem(@"..\TestData\ESPConfig")]
+        [Timeout(TestTimeout.Infinite)]
 
-        #region LocalTestMethods
-        public void Chartclick(DataTable dt, LowisMainWindow lw1, LReportPane lp1)
+        public void espwellgrpconfigAddWell()
         {
-            foreach (DataRow dr in dt.Rows)
+            LowisMainWindow Lwindow = new LowisMainWindow();
+            LReportPane lpnae = new LReportPane();
+            Helper hr = new Helper();
+            string pcptcist = System.IO.Directory.GetCurrentDirectory() + "\\ESPTC.txt";
+            try
             {
-                string tcname = dr["TestCaseID"].ToString();
-                string linkname = dr["Name"].ToString();
-                string chartindex= dr["ChartIndex"].ToString();
-                string charttitle = dr["ChartTitle"].ToString();
-                string chartytitle = dr["ChartYTitle"].ToString();
-                string chartxtitle = dr["ChartXTilte"].ToString();
-                string charty2title = dr["ChartY2Title"].ToString();
-                string chartlegends = dr["ChartLegends"].ToString();
-                // Verify
-                lw1.lowisDwait();
-                lp1.ClickHtmlLink(linkname);
-                lw1.lowisDwait();
-                lp1.VerifyChartPage(tcname, linkname, chartindex, charttitle, chartytitle, charty2title, chartxtitle, chartlegends);
+
+                string repeat = new string('=', 50);
+                hr.LogtoTextFile(repeat + "Test execution Started" + repeat);
+                Lwindow.All.DoubleClick();
+                Lwindow.AllWels.Click();
+                Lwindow.WellTypes.DoubleClick();
+                Lwindow.AllESPWells.Click();
+                Lwindow.RefreshWells.Click();
+                Lwindow.Start.WaitForControlReady();
+                Lwindow.Start.Click();
+                Lwindow.clickMenuitem(".Configuration", "ESP Well Group Configuration");
+
+                string wellnamesfile = ConfigurationManager.AppSettings["wellnamesfile"];
+                UIObect ui = new UIObect();
+                StreamReader fs = new StreamReader(pcptcist);
+                string line = "";
+                while ((line = fs.ReadLine()) != null)
+                {
+                    // Lwindow.SelectWellfromSearch(line.Trim());
+                    Playback.Wait(2000);
+                    ui.AddData(System.IO.Directory.GetCurrentDirectory() + "\\ESP_ConfigWell_Params.xls", line.Trim());
+                }
+                hr.LogtoTextFile(repeat + "Test execution Ended" + repeat);
+
             }
+            catch (Exception ex)
+            {
+                hr.LogtoTextFile("Exeption occured : " + ex.Message.ToString());
+
+            }
+
+
+
+
+
+
+        }
+        #endregion
+        [TestMethod, Description(@"ESPPumpConfig")]
+        [DeploymentItem(@"..\TestData\ESPConfig")]
+        public void esppumpconfig()
+        {
+            LowisMainWindow Lwindow = new LowisMainWindow();
+            LReportPane lpnae = new LReportPane();
+            Helper hr = new Helper();
+            string srchWell1 = ConfigurationManager.AppSettings["testwell1"];
+            try
+            {
+
+                string repeat = new string('=', 50);
+                hr.LogtoTextFile(repeat + "Test execution Started" + TestContext.TestName + "  " + repeat);
+                Lwindow.All.DoubleClick();
+                Lwindow.AllWels.Click();
+                Lwindow.WellTypes.DoubleClick();
+                Lwindow.AllESPWells.Click();
+                Lwindow.RefreshWells.Click();
+                Lwindow.Start.WaitForControlReady();
+                Lwindow.Start.Click();
+                Lwindow.clickMenuitem(".Configuration", "ESP Well Group Configuration");
+                Lwindow.esppumpconfig.Click();
+                //Select a Sepecific Well that can have good data to test these
+                //  Lwindow.SelectWellfromSearch(srchWell1);
+                //   DataTable dt = hr.dtFromExcelFile(System.IO.Directory.GetCurrentDirectory() + "\\BeamChartsLinksName.xls", "Sheet1", "ReportTabPage", "All");
+                string wellnamesfile = ConfigurationManager.AppSettings["wellnamesfile"];
+                UIObect ui = new UIObect();
+                //  System.IO.File.Open(wellnamesfile, FileMode.Open);
+                StreamReader fs = new StreamReader(wellnamesfile);
+                string line = "";
+                while ((line = fs.ReadLine()) != null)
+                {
+                    Lwindow.SelectWellfromSearch(line.Trim());
+                    Playback.Wait(2000);
+                    ui.AddData(System.IO.Directory.GetCurrentDirectory() + "\\ESP_pump_Config.xls", "TC_1");
+                }
+
+                //  Lwindow.SelectWellfromSearch(srchWell1);
+
+
+
+
+                hr.LogtoTextFile(repeat + "Test execution Ended" + TestContext.TestName + "  " + repeat);
+
+            }
+            catch (Exception ex)
+            {
+                hr.LogtoTextFile("Exeption occured : " + ex.Message.ToString());
+
+            }
+
+            
+
+
         }
 
+     
 
-        #endregion
+
+       
+
+       
         
 
       

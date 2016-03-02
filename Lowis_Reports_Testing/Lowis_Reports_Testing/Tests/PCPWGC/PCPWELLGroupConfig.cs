@@ -94,47 +94,7 @@ namespace Lowis_Reports_Testing
 
         }
         #endregion
-
-     //   [TestMethod]
-     //   public void getallhtmllinks()
-      /*  {
-            LReportPane lp2 = new LReportPane();
-            Helper hp1 = new Helper();
-            hp1.LogtoTextFile(lp2.getallhtmllinks());
-        } */
-
-        #region LocalTestMethods
-        public void Chartclick(DataTable dt, LowisMainWindow lw1, LReportPane lp1)
-        {
-            foreach (DataRow dr in dt.Rows)
-            {
-                string tcname = dr["TestCaseID"].ToString();
-                string linkname = dr["Name"].ToString();
-                string chartindex= dr["ChartIndex"].ToString();
-                string charttitle = dr["ChartTitle"].ToString();
-                string chartytitle = dr["ChartYTitle"].ToString();
-                string chartxtitle = dr["ChartXTilte"].ToString();
-                string charty2title = dr["ChartY2Title"].ToString();
-                string chartlegends = dr["ChartLegends"].ToString();
-                // Verify
-                lw1.lowisDwait();
-                lp1.ClickHtmlLink(linkname);
-                lw1.lowisDwait();
-                lp1.VerifyChartPage(tcname, linkname, chartindex, charttitle, chartytitle, charty2title, chartxtitle, chartlegends);
-            }
-        }
-
-
-        #endregion
-       
-
-        
-        
-
-      
-
-       
-      
+   
     }
 
    
